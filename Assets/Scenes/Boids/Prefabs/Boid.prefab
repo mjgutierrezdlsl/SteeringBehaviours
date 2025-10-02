@@ -84,6 +84,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <MaxSpeed>k__BackingField: 5
+  _maxRaycasts: 6
+  _viewAngle: 180
 --- !u!114 &6050732348426287956
 MonoBehaviour:
   m_ObjectHideFlags: 0

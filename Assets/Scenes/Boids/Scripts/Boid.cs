@@ -5,6 +5,8 @@ namespace DLSL.SteeringBehaviours.Boids
     public class Boid : MonoBehaviour
     {
         [field: SerializeField] public float MaxSpeed { get; private set; } = 5f;
+        [SerializeField] private int _maxRaycasts = 10;
+        [SerializeField] private float _viewAngle = 360f;
         public Vector3 Velocity { get; set; }
 
         /// <summary>
@@ -87,6 +89,20 @@ namespace DLSL.SteeringBehaviours.Boids
             }
 
             return Vector3.zero;
+        }
+
+        public Vector3 Avoidance(LayerMask obstacleLayer, float viewRange)
+        {
+            Vector3 direction = Vector3.zero;
+            var delta = _viewAngle / _maxRaycasts;
+            for (int i = 0; i < _maxRaycasts; i++)
+            {
+                var dir = Quaternion.Euler(0, 0, i * delta) * transform.right;
+                var hit = Physics2D.Raycast(transform.position, dir, viewRange, obstacleLayer);
+                Debug.DrawRay(transform.position, dir * viewRange, hit ? Color.red : Color.cyan);
+                direction += (Vector3)hit.normal;
+            }
+            return direction;
         }
     }
 }

@@ -12,7 +12,10 @@ namespace DLSL.SteeringBehaviours.Boids
         [SerializeField] private float _cohesionWeight = 1f;
         [SerializeField] private float _separationWeight = 1f;
         [SerializeField] private float _alignmentWeight = 1f;
+        [SerializeField] private float _avoidanceWeight = 1f;
         [SerializeField] private float _separationRadius = 2f;
+        [SerializeField] private float _viewRange = 1f;
+        [SerializeField] private LayerMask _obstacleLayer = 1 << 6;
 
         private List<Boid> _boids = new();
 
@@ -33,8 +36,9 @@ namespace DLSL.SteeringBehaviours.Boids
                 var cohesion = boid.Cohesion(neighbors) * _cohesionWeight;
                 var separation = boid.Separation(neighbors, _separationRadius) * _separationWeight;
                 var alignment = boid.Alignment(neighbors) * _alignmentWeight;
+                var avoidance = boid.Avoidance(_obstacleLayer, _viewRange) * _avoidanceWeight;
 
-                boid.Velocity += cohesion + separation + alignment;
+                boid.Velocity += cohesion + separation + alignment + avoidance;
                 boid.Velocity = Vector3.ClampMagnitude(boid.Velocity, boid.MaxSpeed);
                 boid.transform.position += boid.Velocity * Time.deltaTime;
                 boid.transform.up = boid.Velocity;
